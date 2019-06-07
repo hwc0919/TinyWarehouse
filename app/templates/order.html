@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Tiny Warehouse - Order{% endblock title %}
+
+
+{% block css %}
+{{ super() }}
+<style>
+  #order-container {
+    padding-top: 60px;
+    background: linear-gradient(150deg, #4834d4, #30336b, #130f40, #30336b);
+  }
+
+  #order-container h1 {
+    color: snow;
+    font-size: 50px;
+    white-space: nowrap;
+  }
+
+  #create-order-form {
+    color: snow;
+    width: 80%;
+    margin: auto;
+    padding: 30px;
+    border-radius: 5px;
+    min-width: 720px;
+  }
+
+  #create-order-form h2 {
+    font-weight: normal;
+    margin-bottom: 20px;
+  }
+
+  #create-order-form .form-group {
+    width: 100%;
+    margin-bottom: 20px;
+    display: inline-block;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+  }
+
+  #create-order-form .form-group label {
+    display: block;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+  }
+
+  #create-order-form .form-group input,
+  #create-order-form .form-group select {
+    width: 100%;
+    display: block;
+    height: 40px;
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  #create-order-form .form-group textarea {
+    width: 100%;
+    display: block;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid gray;
+    background-color: snow;
+    border-radius: 5px;
+    font-size: 16px;
+    resize: none;
+  }
+
+  #create-order-form .form-group option {
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .submit-order-btn {
+    margin-top: 20px;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+  }
+</style>
+{% endblock css %}
+
+
+{% block navbar_menu %}
+<ul class="navbar-menu">
+  <a href="/">
+    <li class="navbar-menu-item">HOME</li>
+  </a>
+  <a href="/order">
+    <li class="navbar-menu-item menu-active">ORDER</li>
+  </a>
+  <a href="/retrieve">
+    <li class="navbar-menu-item">RETRIEVE</li>
+  </a>
+</ul>
+{% endblock navbar_menu %}
+
+
+{% block container %}
+<div class="container" id="order-container">
+  {% if not warehouses %}
+  <h1 class="center">No Warhouse Available Now.</h1>
+  {% elif not kinds %}
+  <h1 class="center">Goods Kinds Not Set.</h1>
+  {% else %}
+  <form id="create-order-form">
+    <h2>Create Your Order</h2>
+    <div class="form-group">
+      <label>Order Name</label>
+      <input type="text" name="name" required>
+    </div>
+    <div class="form-group">
+      <label>Choose Cargo Kind</label>
+      <select name="kind">
+        {% for kind in kinds %}
+        <option>{{ kind }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Order Description</label>
+      <textarea type="text" name="description" required></textarea>
+    </div>
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" name="username" required>
+    </div>
+    <div class="form-group">
+      <label>Choose Warehouse</label>
+      <select name="wh_name">
+        {% for wh in warehouses %}
+        <option>{{ wh }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="btn btn-primary submit-order-btn" type="button" onclick="submitOrder()">Submit Order</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock container %}
+
+
+{% block js %}
+{{ super() }}
+<script>
+  function submitOrder() {
+    jQuery.ajax({
+      url: "/ajax/create_order",
+      data: jQuery("#create-order-form").serialize(),
+      type: "POST",
+      dataType: "json",
+      success: function (resp) {
+        if (resp.status == true) {
+          jQuery("input").val("");
+          jQuery("textarea").val("");
+          alert(resp.message);
+          window.open(resp.url, "_blank");
+        } else {
+          alert(resp.message);
+        }
+      },
+      error: function () {
+        alert('Submission failed, pleace check Internet connection.')
+      }
+    })
+  }
+
+</script>
+{% endblock js %}

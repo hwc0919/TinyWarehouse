@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Tiny Warehouse - Home{% endblock title %}
+
+{% block css %}
+{{ super() }}
+<style>
+    #index-container {
+        background: url('/static/images/bg.jpg');
+        padding-top: 60px;
+    }
+
+    #index-container h1 {
+        color: snow;
+        font-size: 50px;
+        white-space: nowrap;
+    }
+
+    #index-container h1 span {
+        color: #74b9ff;
+    }
+</style>
+{% endblock css %}
+
+{% block container %}
+<div class="container" id="index-container">
+<h1 class="center noselect">Welcome to <span>Tiny Warehouse</span></h1>
+</div>
+{% endblock container %}

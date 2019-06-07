@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Tiny Warehouse - retrieve{% endblock title %}
+
+
+{% block css %}
+{{ super() }}
+<style>
+  #retrieve-container {
+    padding-top: 60px;
+    background: linear-gradient(150deg, #4834d4, #30336b, #130f40, #30336b);
+  }
+
+  #retrieve-order-form {
+    color: snow;
+    width: 80%;
+    margin: auto;
+    padding: 30px;
+    border-radius: 5px;
+    min-width: 720px;
+  }
+
+  #retrieve-order-form h2 {
+    font-weight: normal;
+    margin-bottom: 20px;
+  }
+
+  #retrieve-order-form .form-group {
+    width: 100%;
+    margin-bottom: 20px;
+    display: inline-block;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+  }
+
+  #retrieve-order-form .form-group label {
+    display: block;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+  }
+
+  #retrieve-order-form .form-group input {
+    width: 100%;
+    display: block;
+    height: 40px;
+    padding: 10px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  #retrieve-order-form .form-group option {
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .check-order-btn,
+  .retrieve-order-btn {
+    margin-top: 20px;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+  }
+</style>
+{% endblock css %}
+
+
+{% block navbar_menu %}
+<ul class="navbar-menu">
+  <a href="/">
+    <li class="navbar-menu-item">HOME</li>
+  </a>
+  <a href="/order">
+    <li class="navbar-menu-item">ORDER</li>
+  </a>
+  <a href="/retrieve">
+    <li class="navbar-menu-item menu-active">RETRIEVE</li>
+  </a>
+</ul>
+{% endblock navbar_menu %}
+
+
+{% block container %}
+<div class="container" id="retrieve-container">
+  <form id="retrieve-order-form">
+    <h2>Retrieve Your Order</h2>
+    <div class="form-group">
+      <label>Order ID</label>
+      <input type="text" name="oid" required>
+    </div>
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" name="username" required>
+    </div>
+    <button class="btn btn-primary retrieve-order-btn" type="button" onclick="retrieveOrder('retrieve')">Retrieve
+      Order</button>
+    <button class="btn btn-trans check-order-btn" type="button" onclick="retrieveOrder('check')">Check Order</button>
+  </form>
+</div>
+{% endblock container %}
+
+
+{% block js %}
+{{ super() }}
+<script>
+  function retrieveOrder(operation) {
+    jQuery.ajax({
+      url: "/ajax/retrieve_order?operation=" + operation,
+      data: jQuery("#retrieve-order-form").serialize(),
+      type: "POST",
+      dataType: "json",
+      success: function (resp) {
+        if (resp.status == true && operation == "retrieve") {
+          jQuery("input").val("");
+          alert(resp.message);
+        } else {
+          alert(resp.message);
+        }
+      },
+      error: function () {
+        alert('Operation failed, pleace check Internet connection.')
+      }
+    })
+  }
+
+</script>
+{% endblock js %}

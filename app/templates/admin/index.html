@@ -1,0 +1,44 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<style>
+    .description h1 {
+        margin: 30px 0;
+    }
+
+    span.red {
+        color: red;
+    }
+
+    p {
+        margin: 20px 0;
+    }
+</style>
+<div class="description">
+    <h1>Hello Admin</h1>
+    <h4>You can manage your warehouses and orders here</h4>
+    <p><strong>Please <span class="red">do not</span> drop warehouses arbitrarily, warehouses, subwares and orders are
+            connected</strong></p>
+</div>
+<div>
+    <p>Click <button type="button" class="btn btn-primary" onclick="checkDetails()">HERE</button> to fix the
+        <b><i>In Stock</i></b> numbers</p>
+    <a href="/">HOME PAGE</a>
+</div>
+<script src={{ url_for("static", filename="tools/jquery-3.4.0.min.js") }}></script>
+<script>
+    function checkDetails() {
+        jQuery.ajax({
+            url: "ajax/check_details",
+            type: "GET",
+            dataType: "json",
+            success: function (resp) {
+                alert(resp.message);
+            },
+            error: function () {
+                alert('Operation failed, pleace check Internet connection.')
+            }
+        });
+    }
+</script>
+{% endblock %}
